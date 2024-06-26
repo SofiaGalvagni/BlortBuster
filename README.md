@@ -7,7 +7,7 @@ Luego de clonar el repositorio instala las dependencias con el siguiente comando
 - `npm install`
 
 Una vex instalado el proyecto y todas sus dependencias encendelo: 
-- `npm run dev`
+- `npm run start`
 
 Una vez iniciado ya podes empezar a utilizar el proyecto
 
