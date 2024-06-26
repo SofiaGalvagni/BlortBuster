@@ -33,10 +33,6 @@ Movie.init({
   precio: {
     type: DataTypes.DOUBLE,
     allowNull:false
-  },
-  isReserved: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
   }
 
   },

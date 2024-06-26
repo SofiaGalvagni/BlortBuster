@@ -1,5 +1,6 @@
 import UserService from "../services/UserService.js";
 
+
 class UserController {
 
 
@@ -105,19 +106,7 @@ class UserController {
       }
     }
   
-    bookMovie = async (req, res)=>{
-      try {
-        const { user } = req;
-        const { idMovie } = req.body;
-        await this.userServices.bookMovie(user.id, idMovie)
-        res.status(200).send({
-        success: true,
-        message: "Pelicula reservada",
-      });
-      } catch (error) {
-        res.status(400).send({ succces: false, message: error.message });
-      }
-    }
+    
   
 }
 

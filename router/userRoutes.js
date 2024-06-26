@@ -18,4 +18,5 @@ userRoutes.put("/:id", userController.updateUser);
 userRoutes.delete("/:id", userController.deleteUser);
 
 
+
 export default userRoutes;

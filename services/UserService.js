@@ -1,8 +1,6 @@
 import User from "../models/User.js";
 import { generateToken } from "../utils/token.js";
-import BookingService from "./BookingService.js";
 
-const bookingService = new BookingService();
 class UserService {
 
 
@@ -86,15 +84,7 @@ class UserService {
       }
     };
 
-    bookMovie = async () =>{
-      //verificar
-
-
-      
-      //al final de todo
-      bookingService.createBooking()
-
-    }
+    
 }
 
 export default UserService;

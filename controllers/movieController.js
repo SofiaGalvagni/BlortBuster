@@ -1,4 +1,7 @@
 import MovieServices from "../services/MovieServices.js";
+import BookingService from "./BookingService.js";
+
+const bookingService = new BookingService();
 
 class MovieController{
 
@@ -74,7 +77,19 @@ class MovieController{
       
     }
   }
-  
+  bookMovie = async (req, res)=>{
+    try {
+      const { user } = req;
+      const { idMovie } = req.params;
+      await this.movieServices.bookMovie(user.id, idMovie)
+      res.status(200).send({
+      success: true,
+      message: "Pelicula reservada",
+    });
+    } catch (error) {
+      res.status(400).send({ succces: false, message: error.message });
+    }
+  }
 
 }
 

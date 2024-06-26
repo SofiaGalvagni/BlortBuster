@@ -1,67 +1,88 @@
 import Booking from "../models/Booking.js";
+import MovieService from "../services/MovieServices.js";
+
+const movieService = new MovieService()
 
 class BookingService {
+
 
 
     getAllBookings = async()=>{
       try {
         return await Booking.findAll()
       } catch (error) {
-        console.error("Error fetching all bookings:", error);
-        throw new Error("Unable to fetch bookings");
+        
       }
     }
     
     getById = async(id)=>{
       try {
-        const booking = await Booking.findByPk(id);
-        if (!booking) {
-          throw new Error("Booking not found");
-        }
-        return await booking
+        return await Booking.findByPk(id)
       } catch (error) {
-          console.error(`Error fetching booking with id ${id}:`, error);
-          throw new Error("Unable to fetch booking");
+        
       }
     }
     
     
-    createBooking = async (newBooking)=>{
+    createBooking = async (userId, movieId)=>{
       try {
-          return await Booking.create(newBooking);
+
+        //traer y verificar existencia de pelicula deseada
+        const movie = await movieService.getById(movieId);
+        if (!movie) throw new Error("Movie not found");
+        
+        //verificar cantidad de peliculas permitida por usuario CREAR
+        const maxBookings = await checkUserPending(userId)
+        if(!maxBookings) throw new Error("Alcanzó maxima cantidad de alquileres");
+        
+        //verificar si tiene la misma pelicula ya alquilada CREAR
+        const alreadyBooked = await checkMovieAlreadyBooked(userId, movieId)
+        if(!alreadyBooked) throw new Error("Ya tiene alquilada la pelicula deseada");
+
+        //verificar si hay stock disponible de la pelicula deseada. CREAR
+        const stock = await movieService.checkStock(movieId)
+        if(!stock) throw new Error("No hay stock de pelicula deseada");
+
+        const newBooking = {
+          Movie: movieId,
+          User: userId
+        }
+
+        let newStockAlquilado = movie.stockAlquilado + 1;
+        let newStockDisponible = movie.stockDisponible - 1;
+        movie.set({ stockAlquilado: newStockAlquilado, stockDisponible: newStockDisponible});
+        await movie.save();
+
+        const reservation = await Booking.create(newBooking)
+
+        return reservation;
       } catch (error) {
-        console.error("Error creating new booking:", error);
-        throw new Error("Unable to create booking");
+        throw error;
       }
     }
     
     updateBooking = async(id, newData)=>{
       try {
         const Booking = await this.getById(id)
-        if (!booking) {
-          throw new Error("Booking not found");
-        }
+        
         Booking.set({...newData})
     
         return await Booking.save()
       } catch (error) {
-        console.error(`Error updating booking with id ${id}:`, error);
-        throw new Error("Unable to update booking");
+        throw error;
       }
     }
     
     deleteBooking = async(id)=>{
       try {
         const Booking = await this.getById(id)
-        if (!booking) {
-          throw new Error("Booking not found");
-        }
         return await Booking.destroy()
       } catch (error) {
-        console.error(`Error deleting booking with id ${id}:`, error);
-        throw new Error("Unable to delete booking");
+        throw error;
       }
     }
+
+    
 }
 
 export default BookingService;

@@ -1,4 +1,7 @@
 import Movie from "../models/Movie.js";
+import BookingService from "./BookingService.js";
+
+const bookingService = new BookingService();
 
 
 class MovieServices{
@@ -9,21 +12,15 @@ getAllMovies = async()=>{
       attributes: ["name", "description", "director"],
     })
   } catch (error) {
-    console.error("Error fetching all movies:", error);
-    throw new Error("Unable to fetch movies");
+    
   }
 }
 
 getById = async(id)=>{
   try {
-    const movie = await Movie.findByPk(id);
-    if (!movie) {
-      throw new Error("Movie not found");
-    }
-    return movie;
+    return await Movie.findByPk(id)
   } catch (error) {
-    console.error(`Error fetching movie with id ${id}:`, error);
-    throw new Error("Unable to fetch movie");
+    
   }
 }
 
@@ -32,56 +29,38 @@ createMovie = async (newMovie)=>{
   try {
       return await Movie.create(newMovie);
   } catch (error) {
-    console.error("Error creating new movie:", error);
-    throw new Error("Unable to create movie");
+  
   }
 }
 
 updateMovie = async(id, newData)=>{
   try {
     const movie = await this.getById(id)
-    if (!movie) {
-      throw new Error("Movie not found");
-    }
+    
     movie.set({...newData})
+
     return await movie.save()
   } catch (error) {
-    console.error(`Error updating movie with id ${id}:`, error);
-    throw new Error("Unable to update movie");
+    
   }
 }
 
 deleteMovie = async(id)=>{
   try {
     const movie = await this.getById(id)
-    if (!movie) {
-      throw new Error("Movie not found");
-    }
     return await movie.destroy()
   } catch (error) {
-    console.error(`Error deleting movie with id ${id}:`, error);
-    throw new Error("Unable to delete movie");
+    
   }
 }
 
-reservarMovie = async()=>{
-  try {
-    const movie = await this.getById(movieId);
-    if (!movie) {
-    throw new Error("Movie not found");
-    }
-    const reservation = await Reservation.create({
-      movieId,
-      userId,
-      reservedAt: new Date(),
-    });
-    movie.set({ isReserved: true });
-    await movie.save();
-    return reservation;
-  } catch (error) {
-    console.error("Error reserving movie:", error);
-    throw new Error("Unable to reserve movie");
-}
+
+
+bookMovie = async (userId, movieId) =>{
+     
+  //al final de todo
+  return await bookingService.createBooking(userId, movieId)
+
 }
 
 }
