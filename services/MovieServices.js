@@ -9,13 +9,12 @@ class MovieServices{
 getAllMovies = async()=>{
   try {
     return await Movie.findAll({
-      attributes: ["name", "description", "director"],
+      attributes: ["name"],
     })
   } catch (error) {
     
   }
 }
-
 getById = async(id)=>{
   try {
     return await Movie.findByPk(id)
@@ -23,8 +22,6 @@ getById = async(id)=>{
     
   }
 }
-
-
 createMovie = async (newMovie)=>{
   try {
       return await Movie.create(newMovie);
@@ -32,7 +29,6 @@ createMovie = async (newMovie)=>{
   
   }
 }
-
 updateMovie = async(id, newData)=>{
   try {
     const movie = await this.getById(id)
@@ -44,7 +40,6 @@ updateMovie = async(id, newData)=>{
     
   }
 }
-
 deleteMovie = async(id)=>{
   try {
     const movie = await this.getById(id)
@@ -53,6 +48,8 @@ deleteMovie = async(id)=>{
     
   }
 }
+
+
 
 
 
@@ -84,6 +81,24 @@ bookMovie = async (userId, movieId) =>{
 
 returnMovie = async (userId, movieId) =>{
 try {
+  const laReserva =  await bookingService.findOne({ 
+    where: { 
+      User: userId,
+      Movie: movieId,
+      devuelto: false
+    } 
+  });
+  if(!laReserva) throw new Error("No se encontró la reserva");
+
+  const movie = await getById(movieId);
+  let newStockAlquilado = movie.stockAlquilado - 1;
+  let newStockDisponible = movie.stockDisponible + 1;
+  movie.set({ stockAlquilado: newStockAlquilado, stockDisponible: newStockDisponible});
+  await movie.save();
+
+  const reservaFinalizada = await bookingService.finishBooking(laReserva.id)
+
+  return reservaFinalizada
   
 } catch (error) {
   throw error

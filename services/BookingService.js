@@ -1,7 +1,4 @@
 import Booking from "../models/Booking.js";
-import MovieService from "../services/MovieServices.js";
-
-const movieService = new MovieService()
 
 class BookingService {
 
@@ -14,7 +11,6 @@ class BookingService {
         
       }
     }
-    
     getById = async(id)=>{
       try {
         return await Booking.findByPk(id)
@@ -22,7 +18,29 @@ class BookingService {
         
       }
     }
-    s
+    updateBooking = async(id, newData)=>{
+      try {
+        const booking = await this.getById(id)
+        
+        booking.set({...newData})
+    
+        return await booking.save()
+      } catch (error) {
+        throw error;
+      }
+    }
+    deleteBooking = async(id)=>{
+      try {
+        const booking = await this.getById(id)
+        return await booking.destroy()
+      } catch (error) {
+        throw error;
+      }
+    }
+
+
+
+
     checkUserPending = async (userId)=>{
       try {
         const MAX_ALQUILADO = 3;
@@ -86,26 +104,11 @@ class BookingService {
         throw error;
       }
     }
-    
-    updateBooking = async(id, newData)=>{
-      try {
-        const Booking = await this.getById(id)
-        
-        Booking.set({...newData})
-    
-        return await Booking.save()
-      } catch (error) {
-        throw error;
-      }
-    }
-    
-    deleteBooking = async(id)=>{
-      try {
-        const Booking = await this.getById(id)
-        return await Booking.destroy()
-      } catch (error) {
-        throw error;
-      }
+
+    finishBooking = async(id)=>{
+      const theBooking = await this.getById(id)
+      await theBooking.set({devuelto: true})
+      return await theBooking.save()
     }
 
     

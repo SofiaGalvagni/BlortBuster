@@ -11,7 +11,6 @@ userRoutes.post("/login", userController.login);
 
 userRoutes.use(validateLogin);
 userRoutes.get("/me", userController.me);
-userRoutes.get("/bookMovie", userController.bookMovie);
 userRoutes.get("/", userController.getAllUsers);
 userRoutes.get("/:id", userController.getById);
 userRoutes.put("/:id", userController.updateUser);
