@@ -22,7 +22,45 @@ class BookingService {
         
       }
     }
-    
+    s
+    checkUserPending = async (userId)=>{
+      try {
+        const MAX_ALQUILADO = 3;
+        const {count} = await Booking.findAndCountAll({
+          where: {
+            User: userId,
+            devuelto: false
+          },
+        })
+
+        return count < MAX_ALQUILADO;
+
+      } catch (error) {
+        throw error
+      }
+    }
+
+    checkMovieAlreadyBooked = async (userId, movieId)=>{
+      try {
+        const alreadyBooked = await Booking.findOne({ 
+          where: { 
+            User: userId,
+            Movie: movieId,
+            devuelto: false
+          } 
+        });
+
+        let response = false
+        if(alreadyBooked){
+          response = true
+        }
+
+        return response
+
+      } catch (error) {
+        throw error
+      }
+    }
     
     createBooking = async (userId, movie)=>{
       try {

@@ -11,7 +11,9 @@ movieRoutes.get("/:id", movieController.getById);
 movieRoutes.post("/", movieController.createMovie);
 movieRoutes.put("/:id", movieController.updateMovie);
 movieRoutes.delete("/:id", movieController.deleteMovie);
+
 movieRoutes.post("/book/:id", movieController.bookMovie);
+movieRoutes.post("/return/:id", movieController.returnMovie);
 
 
 export default movieRoutes;

@@ -57,14 +57,14 @@ deleteMovie = async(id)=>{
 
 
 bookMovie = async (userId, movieId) =>{
-     
+   try {
+   
   //traer y verificar existencia de pelicula deseada
   const movie = await getById(movieId);
   if (!movie) throw new Error("Movie not found"); 
 
   //verificar si hay stock disponible de la pelicula deseada. CREAR
-  const stock = await checkStock(movieId)
-  if(!stock) throw new Error("No hay stock de pelicula deseada");
+  if(movie.stockDisponible <= 0) throw new Error("No hay stock de pelicula deseada");
 
   //al final de todo
   const reserva =  await bookingService.createBooking(userId, movie);
@@ -76,7 +76,18 @@ bookMovie = async (userId, movieId) =>{
   await movie.save();
 
   return reserva;
+ 
+} catch (error) {
+    throw error
+}  
+}
 
+returnMovie = async (userId, movieId) =>{
+try {
+  
+} catch (error) {
+  throw error
+}
 }
 
 }
