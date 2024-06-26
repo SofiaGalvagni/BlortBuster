@@ -18,5 +18,5 @@ await connectionDb.sync({alter: true});
 
 
 app.listen(SERVER_PORT, () => {
-  console.log(`🚀 listen carefully`, SERVER_PORT);
+  console.log(`Server funcionando en puerto: `, SERVER_PORT);
 });

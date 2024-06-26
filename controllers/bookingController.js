@@ -76,23 +76,6 @@ class BookingController {
         
       }
     }
-    
-    login = (req, res)=>{
-      try {
-        
-      } catch (error) {
-        
-      }
-    }
-    me = (req, res)=>{
-      try {
-        
-      } catch (error) {
-        
-      }
-    }
-  
-  
 }
 
 export default BookingController;
