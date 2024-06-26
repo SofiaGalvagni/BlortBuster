@@ -1,13 +1,14 @@
 import User from "../models/User.js";
+import { generateToken } from "../utils/token.js";
+import BookingService from "./BookingService.js";
 
+const bookingService = new BookingService();
 class UserService {
 
 
     getAllUsers = async()=>{
       try {
-        return await User.findAll({
-          attributes: ["name", "email", "password"],
-        })
+        return await User.findAll({attributes:['name']});
       } catch (error) {
         
       }
@@ -26,7 +27,7 @@ class UserService {
       try {
           return await User.create(newUser);
       } catch (error) {
-      
+        return error;
       }
     }
     
@@ -49,6 +50,50 @@ class UserService {
       } catch (error) {
         
       }
+    }
+
+
+
+    validatePassword = async (pass)=>{
+      try {
+        const validatation = User.validatePassword(pass);
+        return validatation
+      } catch (error) {
+        throw error;
+      }
+    }
+
+
+    login = async (email, password) => {
+      try {
+        const data = await User.findOne({ where: { email } });
+        if (!data) throw new Error("Credenciales incorrectas");
+
+        const validatePassword = await data.validatePassword(password);
+        if (!validatePassword) throw new Error("Credenciales incorrectas");
+
+        const payload = {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+        };
+
+        const token = generateToken(payload);
+        return token
+
+      } catch (error) {
+        throw error;
+      }
+    };
+
+    bookMovie = async () =>{
+      //verificar
+
+
+      
+      //al final de todo
+      bookingService.createBooking()
+
     }
 }
 

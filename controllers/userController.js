@@ -7,7 +7,7 @@ class UserController {
   
     getAllUsers = async(req, res)=>{
       try {
-        const data = await this.UserService.getAllUsers();
+        const data = await this.userServices.getAllUsers();
         res.status(201).send({
           message: data,
         });
@@ -22,8 +22,7 @@ class UserController {
         const newUser = {
           name : req.body.name, 
           email : req.body.email, 
-          password : req.body.password, 
-          alreadyBooked: false
+          password : req.body.password
         };
         const data = await this.userServices.createUser(newUser)
   
@@ -77,7 +76,48 @@ class UserController {
       }
     }
     
+    login = async(req, res)=>{
+      try {
+        const { email, password } = req.body;
+        const token = await this.userServices.login(email, password)
+        console.log(token)
+        res.cookie("token", token);
+
+        res.status(200).send({
+          success: true,
+          message: "usuario logueado con exito",
+        });
+        
+      } catch (error) {
+        res.status(400).send({ succces: false, message: error.message });
+      }
+    }
+    me = (req, res)=>{
+      try {
+        const { user } = req;
+        res.status(200).send({
+        success: true,
+        message: user,
+      });
+        
+      } catch (error) {
+        res.status(400).send({ succces: false, message: error.message });
+      }
+    }
   
+    bookMovie = async (req, res)=>{
+      try {
+        const { user } = req;
+        const { idMovie } = req.body;
+        await this.userServices.bookMovie(user.id, idMovie)
+        res.status(200).send({
+        success: true,
+        message: "Pelicula reservada",
+      });
+      } catch (error) {
+        res.status(400).send({ succces: false, message: error.message });
+      }
+    }
   
 }
 

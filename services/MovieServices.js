@@ -51,6 +51,9 @@ deleteMovie = async(id)=>{
   }
 }
 
+reservarMovie = async()=>{
+  
+}
 
 }
 
