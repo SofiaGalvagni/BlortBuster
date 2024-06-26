@@ -1,19 +1,17 @@
-import Booking from "../models/Booking.js";
+import Booking from "../models/models.js";
 
 class BookingService {
 
-
-
     getAllBookings = async()=>{
       try {
-        return await Booking.findAll()
+        return await Booking.Booking.findAll()
       } catch (error) {
         
       }
     }
     getById = async(id)=>{
       try {
-        return await Booking.findByPk(id)
+        return await Booking.Booking.findByPk(id)
       } catch (error) {
         
       }
@@ -44,9 +42,9 @@ class BookingService {
     checkUserPending = async (userId)=>{
       try {
         const MAX_ALQUILADO = 3;
-        const {count} = await Booking.findAndCountAll({
+        const {count} = await Booking.Booking.findAndCountAll({
           where: {
-            User: userId,
+            userId: userId,
             devuelto: false
           },
         })
@@ -60,16 +58,16 @@ class BookingService {
 
     checkMovieAlreadyBooked = async (userId, movieId)=>{
       try {
-        const alreadyBooked = await Booking.findOne({ 
+        const alreadyBooked = await Booking.Booking.findOne({ 
           where: { 
-            User: userId,
-            Movie: movieId,
+            userId: userId,
+            movieId: movieId,
             devuelto: false
           } 
         });
 
         let response = false
-        if(alreadyBooked){
+        if(!alreadyBooked){
           response = true
         }
 
@@ -86,18 +84,20 @@ class BookingService {
         const movieId = movie.id;
 
         //verificar cantidad de peliculas permitida por usuario CREAR
-        const maxBookings = await checkUserPending(userId)
+        console.log('hola')
+        const maxBookings = await this.checkUserPending(userId)
         if(!maxBookings) throw new Error("Alcanzó maxima cantidad de alquileres");
         
         //verificar si tiene la misma pelicula ya alquilada CREAR
-        const alreadyBooked = await checkMovieAlreadyBooked(userId, movieId)
+        const alreadyBooked = await this.checkMovieAlreadyBooked(userId, movieId)
         if(!alreadyBooked) throw new Error("Ya tiene alquilada la pelicula deseada");
 
         const newBooking = {
-          Movie: movieId,
-          User: userId
+          userId: userId,
+          movieId: movieId,
         }
-        const reservation = await Booking.create(newBooking)
+
+        const reservation = await Booking.Booking.create(newBooking)
 
         return reservation;
       } catch (error) {
@@ -107,8 +107,13 @@ class BookingService {
 
     finishBooking = async(id)=>{
       const theBooking = await this.getById(id)
-      await theBooking.set({devuelto: true})
+      theBooking.set({devuelto: true})
       return await theBooking.save()
+    }
+
+
+    findOne = async (data) =>{
+      return Booking.Booking.findOne(data)
     }
 
     

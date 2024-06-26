@@ -5,7 +5,8 @@ class Movie extends Model{}
 
 Movie.init({
   id:{
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
     allowNull: false,
     unique: true,
     primaryKey:true
@@ -28,7 +29,8 @@ Movie.init({
   },
   stockAlquilado: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    defaultValue: 0
   },
   precio: {
     type: DataTypes.DOUBLE,

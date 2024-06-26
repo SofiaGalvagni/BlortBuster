@@ -20,7 +20,9 @@ class MovieController{
       const newMovie = {
         name : req.body.name, 
         description : req.body.description, 
-        director : req.body.director, 
+        director : req.body.director,
+        stockDisponible: req.body.stockDisponible,
+        precio: req.body.precio 
       };
       const data = await this.movieServices.createMovie(newMovie)
 

@@ -3,7 +3,6 @@ import connectionDb from "../connection/connectionDb.js";
 
 class Booking extends Model{
 
-
 }
 
 Booking.init({
