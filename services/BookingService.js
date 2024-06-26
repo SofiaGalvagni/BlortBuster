@@ -18,7 +18,7 @@ class BookingService {
         if (!booking) {
           throw new Error("Booking not found");
         }
-        return await Booking.findByPk(id)
+        return await booking
       } catch (error) {
           console.error(`Error fetching booking with id ${id}:`, error);
           throw new Error("Unable to fetch booking");
