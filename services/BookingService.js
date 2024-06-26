@@ -24,13 +24,11 @@ class BookingService {
     }
     
     
-    createBooking = async (userId, movieId)=>{
+    createBooking = async (userId, movie)=>{
       try {
-
-        //traer y verificar existencia de pelicula deseada
-        const movie = await movieService.getById(movieId);
-        if (!movie) throw new Error("Movie not found");
         
+        const movieId = movie.id;
+
         //verificar cantidad de peliculas permitida por usuario CREAR
         const maxBookings = await checkUserPending(userId)
         if(!maxBookings) throw new Error("Alcanzó maxima cantidad de alquileres");
@@ -39,20 +37,10 @@ class BookingService {
         const alreadyBooked = await checkMovieAlreadyBooked(userId, movieId)
         if(!alreadyBooked) throw new Error("Ya tiene alquilada la pelicula deseada");
 
-        //verificar si hay stock disponible de la pelicula deseada. CREAR
-        const stock = await movieService.checkStock(movieId)
-        if(!stock) throw new Error("No hay stock de pelicula deseada");
-
         const newBooking = {
           Movie: movieId,
           User: userId
         }
-
-        let newStockAlquilado = movie.stockAlquilado + 1;
-        let newStockDisponible = movie.stockDisponible - 1;
-        movie.set({ stockAlquilado: newStockAlquilado, stockDisponible: newStockDisponible});
-        await movie.save();
-
         const reservation = await Booking.create(newBooking)
 
         return reservation;

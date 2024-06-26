@@ -58,8 +58,24 @@ deleteMovie = async(id)=>{
 
 bookMovie = async (userId, movieId) =>{
      
+  //traer y verificar existencia de pelicula deseada
+  const movie = await getById(movieId);
+  if (!movie) throw new Error("Movie not found"); 
+
+  //verificar si hay stock disponible de la pelicula deseada. CREAR
+  const stock = await checkStock(movieId)
+  if(!stock) throw new Error("No hay stock de pelicula deseada");
+
   //al final de todo
-  return await bookingService.createBooking(userId, movieId)
+  const reserva =  await bookingService.createBooking(userId, movie);
+  if(!reserva) throw new Error("No fué posible crear Reserva");
+
+  let newStockAlquilado = movie.stockAlquilado + 1;
+  let newStockDisponible = movie.stockDisponible - 1;
+  movie.set({ stockAlquilado: newStockAlquilado, stockDisponible: newStockDisponible});
+  await movie.save();
+
+  return reserva;
 
 }
 
