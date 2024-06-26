@@ -66,8 +66,19 @@ deleteMovie = async(id)=>{
 
 reservarMovie = async()=>{
   try {
-    // Implementar logica de reserva
-} catch (error) {
+    const movie = await this.getById(movieId);
+    if (!movie) {
+    throw new Error("Movie not found");
+    }
+    const reservation = await Reservation.create({
+      movieId,
+      userId,
+      reservedAt: new Date(),
+    });
+    movie.set({ isReserved: true });
+    await movie.save();
+    return reservation;
+  } catch (error) {
     console.error("Error reserving movie:", error);
     throw new Error("Unable to reserve movie");
 }
